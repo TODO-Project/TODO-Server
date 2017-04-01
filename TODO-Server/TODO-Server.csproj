@@ -62,6 +62,10 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Console\Commands\ClearCommand.cs" />
+    <Compile Include="Console\Commands\Command.cs" />
+    <Compile Include="Console\Commands\EchoCommand.cs" />
+    <Compile Include="Console\Commands\HelpCommand.cs" />
     <Compile Include="Console\ConsoleFlags.cs" />
     <Compile Include="Console\ServerConsole.cs" />
     <Compile Include="MainWindow.xaml.cs">

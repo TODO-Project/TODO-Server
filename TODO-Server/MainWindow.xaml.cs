@@ -24,14 +24,17 @@ namespace TODO_Server
         public MainWindow()
         {
             InitializeComponent();
+            ServerConsole.Console = TextBlockConsole;
         }
 
         private void TextBoxConsoleInput_KeyUp(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
             {
-                string message = TextBoxConsoleInput.Text;
-                TextBlockConsole.Text += "\n" + ServerConsole.Print(message, ConsoleFlags.Info);
+                if (!ServerConsole.HandleCommands(TextBoxConsoleInput.Text))
+                {
+                    TextBlockConsole.Text += ServerConsole.Print("Command \"" + TextBoxConsoleInput.Text + "\" unknown. ", ConsoleFlags.Alert);
+                }
                 TextBoxConsoleInput.Text = "";
             }
         }

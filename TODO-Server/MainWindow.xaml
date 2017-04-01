@@ -8,7 +8,9 @@
         Title="TODO-Server Console" Height="620" Width="1000">
     <Grid>
         <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="500" Margin="24,16,0,0" VerticalAlignment="Top" Width="400">
-            <TextBlock x:Name="TextBlockConsole" TextWrapping="Wrap" Margin="0,0,0,0" FontFamily="Courier New"/>
+            <ScrollViewer x:Name="ScrollViewerConsole">
+                <TextBlock x:Name="TextBlockConsole" TextWrapping="Wrap" Margin="0,0,0,0" FontFamily="Courier New"/>
+            </ScrollViewer>
         </Border>
         <TextBox x:Name="TextBoxConsoleInput" HorizontalAlignment="Left" Height="22" Margin="24,540,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="400" KeyUp="TextBoxConsoleInput_KeyUp" />
         <ListView x:Name="ListViewPlayerList" HorizontalAlignment="Left" Height="362" Margin="562,10,0,0" VerticalAlignment="Top" Width="396">
