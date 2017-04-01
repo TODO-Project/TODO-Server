@@ -1,12 +1,25 @@
-﻿<Window x:Class="TODO_Server.MainWindow"
+﻿<Window x:Name="MainWindow1" x:Class="TODO_Server.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TODO_Server"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        Title="TODO-Server Console" Height="620" Width="1000">
     <Grid>
-        
+        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="500" Margin="24,16,0,0" VerticalAlignment="Top" Width="400">
+            <TextBlock x:Name="TextBlockConsole" TextWrapping="Wrap" Margin="0,0,0,0" FontFamily="Courier New"/>
+        </Border>
+        <TextBox x:Name="TextBoxConsoleInput" HorizontalAlignment="Left" Height="22" Margin="24,540,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="400" KeyUp="TextBoxConsoleInput_KeyUp" />
+        <ListView x:Name="ListViewPlayerList" HorizontalAlignment="Left" Height="362" Margin="562,10,0,0" VerticalAlignment="Top" Width="396">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Player" Width="120" DisplayMemberBinding="{Binding Name}"/>
+                    <GridViewColumn Header="HP" Width="50" DisplayMemberBinding="{Binding HP}" />
+                    <GridViewColumn Header="Ping" Width="50" DisplayMemberBinding="{Binding Ping}" />
+                    <GridViewColumn Header="IP" Width="120" DisplayMemberBinding="{Binding IP}"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
     </Grid>
 </Window>

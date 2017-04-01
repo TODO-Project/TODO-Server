@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using TODO_Server.Console;
 
 namespace TODO_Server
 {
@@ -23,6 +24,16 @@ namespace TODO_Server
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        private void TextBoxConsoleInput_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                string message = TextBoxConsoleInput.Text;
+                TextBlockConsole.Text += "\n" + ServerConsole.Print(message, ConsoleFlags.Info);
+                TextBoxConsoleInput.Text = "";
+            }
         }
     }
 }
