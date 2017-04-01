@@ -9,23 +9,20 @@ namespace TODO_Server.Console.Commands
 {
     public class HelpCommand : Command
     {
-        public TextBlock Target { get; set; }
-
-        public HelpCommand(TextBlock target)
+        public HelpCommand()
         {
-            Target = target;
             Execute();
         }
 
-        public override bool Execute()
+        public override void Execute()
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("Help menu");
             sb.AppendLine("\techo <message> : Print the message");
             sb.AppendLine("\tclear/cls : Clear the console");
             sb.AppendLine("\thelp : Display this message");
-            Target.Text += ServerConsole.Print(sb.ToString());
-            return false;
+            sb.AppendLine("\tseed : Displays the seed");
+            ServerConsole.Print(sb.ToString());
         }
     }
 }

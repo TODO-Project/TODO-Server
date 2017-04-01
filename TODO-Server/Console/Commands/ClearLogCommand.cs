@@ -3,27 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Controls;
 
 namespace TODO_Server.Console.Commands
 {
-    public class ClearCommand : Command
+    public class ClearLogCommand : Command
     {
-        public TextBlock Target
+        public ClearLogCommand()
         {
-            get;
-            set;
-        }
-
-        public ClearCommand(TextBlock target)
-        {
-            Target = target;
             Execute();
         }
-
         public override void Execute()
         {
-            Target.Text = "";
+            ServerConsole.ClearLog();
         }
     }
 }

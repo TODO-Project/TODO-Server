@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using TODO_Server.Console.Commands;
 
@@ -11,13 +12,14 @@ namespace TODO_Server.Console
     public static class ServerConsole
     {
         public static TextBlock Console;
+        public static Window ConsoleWindow;
 
-        public static string Print(string message)
+        public static void Print(string message)
         {
-            return "[" + DateTime.Now.ToLongTimeString() + "] >> " + message;
+            Console.Text +=  "\n[" + DateTime.Now.ToLongTimeString() + "] >> " + message;
         }
 
-        public static string Print(string message, ConsoleFlags flag)
+        public static void Print(string message, ConsoleFlags flag)
         {
             string res = "[" + DateTime.Now.ToLongTimeString() + "] ";
             switch (flag)
@@ -37,11 +39,12 @@ namespace TODO_Server.Console
 
             res += message;
             Log(res);
-            return res;
+            Console.Text += "\n" + res;
         }
 
         public static bool HandleCommands(string command)
         {
+            Print(command);
             string[] args = command.Split(' ');
             switch (args[0])
             {
@@ -55,10 +58,19 @@ namespace TODO_Server.Console
                     {
                         echoContent += args[i] + " ";
                     }
-                    new EchoCommand(Console, echoContent);
+                    new EchoCommand(echoContent);
                     return true;
                 case "help":
-                    new HelpCommand(Console);
+                    new HelpCommand();
+                    return true;
+                case "exit":
+                    new ExitCommand(ConsoleWindow);
+                    return true;
+                case "seed":
+                    new SeedCommand();
+                    return true;
+                case "clearlog":
+                    new ClearLogCommand();
                     return true;
                 default:
                     return false;
@@ -68,6 +80,12 @@ namespace TODO_Server.Console
         private static void Log(string line)
         {
             System.IO.File.AppendAllText("server.log", "\n" + line);
+        }
+
+        public static void ClearLog()
+        {
+            System.IO.File.WriteAllText("server.log", string.Empty);
+            Print("Log was cleared successfully", ConsoleFlags.Info);
         }
     }
 }

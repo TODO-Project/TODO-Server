@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using TODO_Server.Console;
+using TODO_Server.Server;
 
 namespace TODO_Server
 {
@@ -24,7 +25,8 @@ namespace TODO_Server
         public MainWindow()
         {
             InitializeComponent();
-            ServerConsole.Console = TextBlockConsole;
+            InitializeConsole();
+            GameServer.Initialize();
         }
 
         private void TextBoxConsoleInput_KeyUp(object sender, KeyEventArgs e)
@@ -33,10 +35,20 @@ namespace TODO_Server
             {
                 if (!ServerConsole.HandleCommands(TextBoxConsoleInput.Text))
                 {
-                    TextBlockConsole.Text += ServerConsole.Print("Command \"" + TextBoxConsoleInput.Text + "\" unknown. ", ConsoleFlags.Alert);
+                    ServerConsole.Print("Command \"" + TextBoxConsoleInput.Text + "\" unknown. ", ConsoleFlags.Alert);
                 }
                 TextBoxConsoleInput.Text = "";
+                if (ScrollViewerConsole.IsEnabled)
+                {
+                    ScrollViewerConsole.ScrollToBottom();
+                }
             }
+        }
+
+        private void InitializeConsole()
+        {
+            ServerConsole.Console = TextBlockConsole;
+            ServerConsole.ConsoleWindow = this;
         }
     }
 }

@@ -3,27 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Controls;
+using TODO_Server.Server;
 
 namespace TODO_Server.Console.Commands
 {
-    public class ClearCommand : Command
+    public class SeedCommand : Command
     {
-        public TextBlock Target
+        public SeedCommand()
         {
-            get;
-            set;
-        }
-
-        public ClearCommand(TextBlock target)
-        {
-            Target = target;
             Execute();
         }
 
         public override void Execute()
         {
-            Target.Text = "";
+            ServerConsole.Print("Seed : " + GameServer.Seed);
         }
     }
 }

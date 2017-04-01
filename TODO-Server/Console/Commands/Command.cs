@@ -8,6 +8,6 @@ namespace TODO_Server.Console.Commands
 {
     public abstract class Command
     {
-        public abstract bool Execute();
+        public abstract void Execute();
     }
 }

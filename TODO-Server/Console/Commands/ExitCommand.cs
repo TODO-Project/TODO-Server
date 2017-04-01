@@ -3,19 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Controls;
+using System.Windows;
 
 namespace TODO_Server.Console.Commands
 {
-    public class ClearCommand : Command
+    public class ExitCommand : Command
     {
-        public TextBlock Target
-        {
-            get;
-            set;
-        }
-
-        public ClearCommand(TextBlock target)
+        public Window Target { get; set; }
+        public ExitCommand(Window target)
         {
             Target = target;
             Execute();
@@ -23,7 +18,7 @@ namespace TODO_Server.Console.Commands
 
         public override void Execute()
         {
-            Target.Text = "";
+            Target.Close();
         }
     }
 }
