@@ -10,6 +10,7 @@ namespace TODO_Server.Console
     {
         Info,
         Alert,
-        Fatal
+        Fatal,
+        Debug
     }
 }

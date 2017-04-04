@@ -33,6 +33,9 @@ namespace TODO_Server.Console
                 case ConsoleFlags.Fatal:
                     res += "[FATAL] >> ";
                     break;
+                case ConsoleFlags.Debug:
+                    res += "[DEBUG] >> ";
+                    break;
                 default:
                     break;
             }
