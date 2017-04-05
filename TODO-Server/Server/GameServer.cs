@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 using TODO_Server.Console;
 using System.Threading;
 using System.Windows;
+using TODO_Server.Server.Messages.Types;
+using TODO_Server.Server.Messages.ClientMessages;
+using TODO_Server.Server.Messages.Server_messages;
 
 namespace TODO_Server.Server
 {
@@ -115,6 +118,7 @@ namespace TODO_Server.Server
                             ApproveConnection(inc);
                             break;
                         case NetIncomingMessageType.Data:
+                            HandleMessages(inc);
                             break;
                         case NetIncomingMessageType.DiscoveryRequest:
                             SendDiscoveryResponse(inc);
@@ -172,6 +176,43 @@ namespace TODO_Server.Server
             {
                 inc.SenderConnection.Deny();
                 ServerConsole.Print("Denied incoming connection from " + inc.SenderEndPoint.ToString() + " (Secret was " + secret + " instead of TODO-Game Client)", ConsoleFlags.Alert);
+            }
+        }
+
+        private static void HandleMessages(NetIncomingMessage inc)
+        {
+            NetOutgoingMessage outmsg = Server.CreateMessage();
+            ClientMessageTypes MessageType = (ClientMessageTypes)inc.ReadByte();
+            switch (MessageType)
+            {
+                case ClientMessageTypes.SendInitialPlayerInfo:
+                    InitialPlayerInfoMessage msg = new InitialPlayerInfoMessage();
+                    msg.DecodeMessage(inc);
+
+                    Player p = new Player(msg.ID, msg.TeamNumber, msg.Weapon, msg.Name)
+                    { IP = inc.SenderEndPoint.ToString() };
+
+                    bool AlreadyExists = false;
+
+                    foreach (var item in ServerConsole.ConsoleWindow.ListViewPlayerList.Items)
+                    {
+                        if ((item as Player).ID == p.ID)
+                            AlreadyExists = true;
+                    }
+
+                    if (!AlreadyExists)
+                    {
+                        ServerConsole.AddNewPlayerToList(p);
+
+                        ServerConsole.Print("Added player " + p.Name + "(" + p.ID + ") to server list", ConsoleFlags.Debug);
+                        ConfirmPlayerArrivalMessage newmsg = new ConfirmPlayerArrivalMessage();
+                        newmsg.EncodeMessage(outmsg);
+                        Server.SendMessage(outmsg, inc.SenderConnection, NetDeliveryMethod.ReliableOrdered);
+                    }
+                    
+                    break;
+                default:
+                    break;
             }
         }
 

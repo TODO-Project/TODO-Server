@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using TODO_Server.Console.Commands;
+using TODO_Server.Server;
 
 namespace TODO_Server.Console
 {
@@ -99,6 +100,14 @@ namespace TODO_Server.Console
         {
             System.IO.File.WriteAllText("server.log", string.Empty);
             Print("Log was cleared successfully", ConsoleFlags.Info);
+        }
+
+        public static void AddNewPlayerToList(Player p)
+        {
+            ConsoleWindow.Dispatcher.BeginInvoke(new Action(delegate ()
+            {
+                ConsoleWindow.ListViewPlayerList.Items.Add(p);
+            }));
         }
     }
 }

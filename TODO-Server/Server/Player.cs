@@ -18,6 +18,8 @@ namespace TODO_Server.Server
         private NetConnection connection;
         private float mouseRotationAngle;
         private int team;
+        private int ping;
+        private string ip;
 
         #endregion
 
@@ -31,6 +33,8 @@ namespace TODO_Server.Server
         public float MouseRotationAngle { get => mouseRotationAngle; set => mouseRotationAngle = value; }
         public int Team { get => team; set => team = value; }
         public bool IsAlive { get => HP <= 0; }
+        public int Ping { get => ping; set => ping = value; }
+        public string IP { get => ip; set => ip = value; }
 
         #endregion
 
@@ -39,6 +43,7 @@ namespace TODO_Server.Server
         public Player(long id)
         {
             ID = id;
+            Ping = 0;
         }
 
         public Player(long id, int team)
@@ -47,10 +52,11 @@ namespace TODO_Server.Server
             Team = team;
         }
 
-        public Player(long id, int team, string weapon)
+        public Player(long id, int team, string weapon, string name)
             : this(id, team)
         {
             Weapon = weapon;
+            Name = name;
         }
 
         #endregion

@@ -49,5 +49,11 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TODO-Server\TODO-Server.csproj">
+      <Project>{6C00E824-7524-4DDD-8B5E-330D063ACBB9}</Project>
+      <Name>TODO-Server</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

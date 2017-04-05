@@ -60,6 +60,13 @@
     <Compile Include="Console\Commands\PortCommand.cs" />
     <Compile Include="Console\Commands\SeedCommand.cs" />
     <Compile Include="Server\GameServer.cs" />
+    <Compile Include="Server\Messages\Abstract\ClientMessage.cs" />
+    <Compile Include="Server\Messages\Abstract\IMessage.cs" />
+    <Compile Include="Server\Messages\Abstract\ServerMessage.cs" />
+    <Compile Include="Server\Messages\Client messages\InitialPlayerInfoMessage.cs" />
+    <Compile Include="Server\Messages\Server messages\ConfirmPlayerArrivalMessage.cs" />
+    <Compile Include="Server\Messages\Types\ClientMessageTypes.cs" />
+    <Compile Include="Server\Messages\Types\ServerMessageTypes.cs" />
     <Compile Include="Server\Player.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -110,8 +117,6 @@
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Server\Messages\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
