@@ -7,6 +7,9 @@ using System.Windows.Controls;
 
 namespace TODO_Server.Console.Commands
 {
+    /// <summary>
+    /// A command that displays basic help content on the console
+    /// </summary>
     public class HelpCommand : Command
     {
         public HelpCommand()

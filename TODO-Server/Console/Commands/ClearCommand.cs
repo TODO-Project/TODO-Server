@@ -7,6 +7,9 @@ using System.Windows.Controls;
 
 namespace TODO_Server.Console.Commands
 {
+    /// <summary>
+    /// A command that clears the console
+    /// </summary>
     public class ClearCommand : Command
     {
         public TextBlock Target

@@ -7,6 +7,9 @@ using TODO_Server.Server;
 
 namespace TODO_Server.Console.Commands
 {
+    /// <summary>
+    /// A command that displays the port the server is listening to
+    /// </summary>
     public class PortCommand : Command
     {
         public PortCommand()

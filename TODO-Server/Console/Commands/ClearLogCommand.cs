@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace TODO_Server.Console.Commands
 {
+    /// <summary>
+    /// A command that clears the log (server.log)
+    /// </summary>
     public class ClearLogCommand : Command
     {
         public ClearLogCommand()

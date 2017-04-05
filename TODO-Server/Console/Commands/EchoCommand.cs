@@ -2,6 +2,9 @@
 
 namespace TODO_Server.Console.Commands
 {
+    /// <summary>
+    /// A command that echoes a given string
+    /// </summary>
     public class EchoCommand : Command
     {
 
