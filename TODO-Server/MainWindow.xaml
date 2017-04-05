@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="TODO-Server Console" Height="620" Width="1000">
     <Grid>
-        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="500" Margin="24,16,0,0" VerticalAlignment="Top" Width="400">
+        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="500" Margin="24,16,0,0" VerticalAlignment="Top" Width="490">
             <ScrollViewer x:Name="ScrollViewerConsole">
                 <TextBlock x:Name="TextBlockConsole" TextWrapping="Wrap" Margin="0,0,0,0" FontFamily="Courier New"/>
             </ScrollViewer>

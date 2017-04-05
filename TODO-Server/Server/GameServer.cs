@@ -71,7 +71,7 @@ namespace TODO_Server.Server
 
             Server.Start();
             ServerThread.Start();
-            ServerConsole.Print("The server has started successfully", ConsoleFlags.Info);
+            ServerConsole.Print("The server has started successfully on thread " + ServerThread.ManagedThreadId + "(" + ServerThread.Name + ")", ConsoleFlags.Info);
         }
 
         private static void Work()
