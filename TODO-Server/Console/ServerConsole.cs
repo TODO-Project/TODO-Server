@@ -12,14 +12,18 @@ namespace TODO_Server.Console
     public static class ServerConsole
     {
         public static TextBlock Console;
-        public static Window ConsoleWindow;
+        public static MainWindow ConsoleWindow;
 
         public static void Print(string message)
-        {
-            Console.Text +=  "\n[" + DateTime.Now.ToLongTimeString() + "] >> " + message;
+        {  
+            ConsoleWindow.Dispatcher.BeginInvoke(new Action(delegate ()
+            {
+                Console.Text += "\n[" + DateTime.Now.ToLongTimeString() + "] >> " + message;
+            }));
         }
 
         public static void Print(string message, ConsoleFlags flag)
+
         {
             string res = "[" + DateTime.Now.ToLongTimeString() + "] ";
             switch (flag)
@@ -42,14 +46,17 @@ namespace TODO_Server.Console
 
             res += message;
             Log(res);
-            Console.Text += "\n" + res;
+            ConsoleWindow.Dispatcher.BeginInvoke(new Action(delegate ()
+            {
+                Console.Text += "\n" + res;
+            }));
         }
 
         public static bool HandleCommands(string command)
         {
             Print(command);
             string[] args = command.Split(' ');
-            switch (args[0])
+            switch (args[0].ToLower())
             {
                 case "cls":
                 case "clear":
@@ -74,6 +81,9 @@ namespace TODO_Server.Console
                     return true;
                 case "clearlog":
                     new ClearLogCommand();
+                    return true;
+                case "port":
+                    new PortCommand();
                     return true;
                 default:
                     return false;

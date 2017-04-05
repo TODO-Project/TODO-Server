@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TODO_Server.Console;
 using System.Threading;
+using System.Windows;
 
 namespace TODO_Server.Server
 {
@@ -25,6 +26,7 @@ namespace TODO_Server.Server
         private static Thread serverThread;
         private static string name;
         private static int packetNumber;
+        private static volatile bool shouldRun;
 
         #endregion
 
@@ -36,6 +38,7 @@ namespace TODO_Server.Server
         public static Thread ServerThread { get => serverThread; set => serverThread = value; }
         public static string Name { get => name; set => name = value; }
         public static int PacketNumber { get => ++packetNumber == int.MaxValue ? 0 : packetNumber; }
+        public static bool ShouldRun { get => shouldRun; set => shouldRun = value; }
 
         #endregion
 
@@ -58,6 +61,7 @@ namespace TODO_Server.Server
         {
             NetPeerConfiguration config = new NetPeerConfiguration("TODO-Game");
             ServerThread = new Thread(Work);
+            ShouldRun = true;
 
             config.MaximumConnections = 128;
             config.Port = 12345;
@@ -76,64 +80,80 @@ namespace TODO_Server.Server
 
         private static void Work()
         {
-            NetIncomingMessage inc;
-
-            while ((inc = Server.ReadMessage()) != null)
+            while(ShouldRun)
             {
-                switch (inc.MessageType)
-                {
-                    case NetIncomingMessageType.Error:
-                        ServerConsole.Print(inc.ReadString(), ConsoleFlags.Alert);
-                        break;
-                    case NetIncomingMessageType.StatusChanged:
-                        switch ((NetConnectionStatus)inc.ReadByte())
-                        {
-                            case NetConnectionStatus.None:
-                                break;
-                            case NetConnectionStatus.ReceivedInitiation:
-                            case NetConnectionStatus.RespondedAwaitingApproval:
-                            case NetConnectionStatus.RespondedConnect:
-                            case NetConnectionStatus.Connected:
-                            case NetConnectionStatus.Disconnecting:
-                            case NetConnectionStatus.Disconnected:
-                                ServerConsole.Print(inc.ReadString(), ConsoleFlags.Info);
-                                break;
-                            default:
-                                break;
-                        }
-                        break;
-                    case NetIncomingMessageType.UnconnectedData:
-                        break;
-                    case NetIncomingMessageType.ConnectionApproval:
-                        ApproveConnection(inc);
-                        break;
-                    case NetIncomingMessageType.Data:
-                        break;
-                    case NetIncomingMessageType.DiscoveryRequest:
-                        SendDiscoveryResponse(inc);
-                        break;
-                    case NetIncomingMessageType.DebugMessage:
-                        ServerConsole.Print(inc.ReadString(), ConsoleFlags.Debug);
-                        break;
-                    case NetIncomingMessageType.WarningMessage:
-                        ServerConsole.Print(inc.ReadString(), ConsoleFlags.Alert);
-                        break;
-                    case NetIncomingMessageType.ErrorMessage:
-                        ServerConsole.Print(inc.ReadString(), ConsoleFlags.Fatal);
-                        break;
-                    case NetIncomingMessageType.ConnectionLatencyUpdated:
-                        break;
-                    default:
-                        break;
-                }
-                Server.Recycle(inc);
-            }
+                UpdateStats();
+                NetIncomingMessage inc;
 
-            Thread.Sleep(Tickrate);
+                while ((inc = Server.ReadMessage()) != null)
+                {
+                    switch (inc.MessageType)
+                    {
+                        case NetIncomingMessageType.Error:
+                            ServerConsole.Print(inc.ReadString(), ConsoleFlags.Alert);
+                            break;
+                        case NetIncomingMessageType.StatusChanged:
+                            switch ((NetConnectionStatus)inc.ReadByte())
+                            {
+                                case NetConnectionStatus.None:
+                                    break;
+                                case NetConnectionStatus.ReceivedInitiation:
+                                case NetConnectionStatus.RespondedAwaitingApproval:
+                                case NetConnectionStatus.RespondedConnect:
+                                case NetConnectionStatus.Connected:
+                                case NetConnectionStatus.Disconnecting:
+                                case NetConnectionStatus.Disconnected:
+                                    ServerConsole.Print(inc.ReadString(), ConsoleFlags.Info);
+                                    break;
+                                default:
+                                    break;
+                            }
+                            break;
+                        case NetIncomingMessageType.UnconnectedData:
+                            break;
+                        case NetIncomingMessageType.ConnectionApproval:
+                            ApproveConnection(inc);
+                            break;
+                        case NetIncomingMessageType.Data:
+                            break;
+                        case NetIncomingMessageType.DiscoveryRequest:
+                            SendDiscoveryResponse(inc);
+                            break;
+                        case NetIncomingMessageType.DebugMessage:
+                            ServerConsole.Print(inc.ReadString(), ConsoleFlags.Debug);
+                            break;
+                        case NetIncomingMessageType.WarningMessage:
+                            ServerConsole.Print(inc.ReadString(), ConsoleFlags.Alert);
+                            break;
+                        case NetIncomingMessageType.ErrorMessage:
+                            ServerConsole.Print(inc.ReadString(), ConsoleFlags.Fatal);
+                            break;
+                        case NetIncomingMessageType.ConnectionLatencyUpdated:
+                            break;
+                        default:
+                            break;
+                    }
+                    Server.Recycle(inc);
+                }
+
+                Thread.Sleep(Tickrate);
+            }
+        }
+
+        private static void UpdateStats()
+        {
+            ServerConsole.ConsoleWindow.Dispatcher.BeginInvoke(new Action(delegate ()
+            {
+                ServerConsole.ConsoleWindow.LabelStatsBytesRecieved.Content = "Bytes recieved : " + Server.Statistics.ReceivedBytes + "B";
+                ServerConsole.ConsoleWindow.LabelStatsBytesSent.Content = "Bytes sent : " + Server.Statistics.SentBytes + "B";
+                ServerConsole.ConsoleWindow.LabelStatsMsgRecieved.Content = "Messages recieved : " + Server.Statistics.ReceivedMessages + "B";
+                ServerConsole.ConsoleWindow.LabelStatsMsgSent.Content = "Messages sent : " + Server.Statistics.SentMessages + "B";
+            }));
         }
 
         private static void SendDiscoveryResponse(NetIncomingMessage inc)
         {
+            ServerConsole.Print("Recieved discovery request from " + inc.SenderEndPoint.ToString(), ConsoleFlags.Info);
             NetOutgoingMessage msg = Server.CreateMessage();
             msg.Write(Name);
 
@@ -144,9 +164,15 @@ namespace TODO_Server.Server
         {
             string secret = inc.ReadString();
             if (secret == "TODO-Game Client")
+            {
                 inc.SenderConnection.Approve();
+                ServerConsole.Print("Approved incoming connection from " + inc.SenderEndPoint.ToString(), ConsoleFlags.Info);
+            }
             else
+            {
                 inc.SenderConnection.Deny();
+                ServerConsole.Print("Denied incoming connection from " + inc.SenderEndPoint.ToString() + " (Secret was " + secret + " instead of TODO-Game Client)", ConsoleFlags.Alert);
+            }
         }
 
         #endregion

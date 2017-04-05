@@ -57,6 +57,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Console\Commands\ClearLogCommand.cs" />
+    <Compile Include="Console\Commands\PortCommand.cs" />
     <Compile Include="Console\Commands\SeedCommand.cs" />
     <Compile Include="Server\GameServer.cs" />
     <Compile Include="Server\Player.cs" />

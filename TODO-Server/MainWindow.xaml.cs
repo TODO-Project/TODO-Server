@@ -50,5 +50,12 @@ namespace TODO_Server
             ServerConsole.Console = TextBlockConsole;
             ServerConsole.ConsoleWindow = this;
         }
+
+        private void MainWindow1_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            ServerConsole.Print("Stopping the server...");
+            GameServer.ShouldRun = false;
+            GameServer.ServerThread.Join();
+        }
     }
 }
