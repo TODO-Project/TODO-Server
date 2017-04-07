@@ -34,6 +34,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Lidgren.Network, Version=3.5.1.1679, Culture=neutral, processorArchitecture=MSIL" />
+    <Reference Include="MonoGame.Framework, Version=3.5.1.1679, Culture=neutral, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -54,6 +56,21 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Console\Commands\ClearLogCommand.cs" />
+    <Compile Include="Console\Commands\KickCommand.cs" />
+    <Compile Include="Console\Commands\PortCommand.cs" />
+    <Compile Include="Console\Commands\SeedCommand.cs" />
+    <Compile Include="Server\GameServer.cs" />
+    <Compile Include="Server\Messages\Abstract\ClientMessage.cs" />
+    <Compile Include="Server\Messages\Abstract\IMessage.cs" />
+    <Compile Include="Server\Messages\Abstract\ServerMessage.cs" />
+    <Compile Include="Server\Messages\Client messages\InitialPlayerInfoMessage.cs" />
+    <Compile Include="Server\Messages\Server messages\ConfirmPlayerArrivalMessage.cs" />
+    <Compile Include="Server\Messages\Server messages\DisconnectedFromServerMessage.cs" />
+    <Compile Include="Server\Messages\Types\ClientMessageTypes.cs" />
+    <Compile Include="Server\Messages\Types\DisconnectionFlags.cs" />
+    <Compile Include="Server\Messages\Types\ServerMessageTypes.cs" />
+    <Compile Include="Server\Player.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -62,6 +79,11 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Console\Commands\ClearCommand.cs" />
+    <Compile Include="Console\Commands\Command.cs" />
+    <Compile Include="Console\Commands\EchoCommand.cs" />
+    <Compile Include="Console\Commands\ExitCommand.cs" />
+    <Compile Include="Console\Commands\HelpCommand.cs" />
     <Compile Include="Console\ConsoleFlags.cs" />
     <Compile Include="Console\ServerConsole.cs" />
     <Compile Include="MainWindow.xaml.cs">
@@ -95,5 +117,9 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

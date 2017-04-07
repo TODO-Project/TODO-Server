@@ -5,10 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TODO_Server"
         mc:Ignorable="d"
-        Title="TODO-Server Console" Height="620" Width="1000">
+        Title="TODO-Server Console" Height="620" Width="1000" Closing="MainWindow1_Closing">
     <Grid>
-        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="500" Margin="24,16,0,0" VerticalAlignment="Top" Width="400">
-            <TextBlock x:Name="TextBlockConsole" TextWrapping="Wrap" Margin="0,0,0,0" FontFamily="Courier New"/>
+        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="500" Margin="24,16,0,0" VerticalAlignment="Top" Width="490">
+            <ScrollViewer x:Name="ScrollViewerConsole">
+                <TextBlock x:Name="TextBlockConsole" TextWrapping="Wrap" Margin="0,0,0,0" FontFamily="Courier New"/>
+            </ScrollViewer>
         </Border>
         <TextBox x:Name="TextBoxConsoleInput" HorizontalAlignment="Left" Height="22" Margin="24,540,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="400" KeyUp="TextBoxConsoleInput_KeyUp" />
         <ListView x:Name="ListViewPlayerList" HorizontalAlignment="Left" Height="362" Margin="562,10,0,0" VerticalAlignment="Top" Width="396">
@@ -21,5 +23,11 @@
                 </GridView>
             </ListView.View>
         </ListView>
+        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="139" Margin="562,398,0,0" VerticalAlignment="Top" Width="396"/>
+        <Label x:Name="LabelStatsTitle" Content="Server statistics" HorizontalAlignment="Left" Height="26" Margin="710,398,0,0" VerticalAlignment="Top" Width="92"/>
+        <Label x:Name="LabelStatsBytesSent" Content="Bytes sent : 0B" HorizontalAlignment="Left" Margin="562,425,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="LabelStatsMsgSent" Content="Messages sent : 0" HorizontalAlignment="Left" Margin="562,456,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="LabelStatsBytesRecieved" Content="Bytes recieved : 0B" HorizontalAlignment="Right" Margin="0,425,34,0" VerticalAlignment="Top"/>
+        <Label x:Name="LabelStatsMsgRecieved" Content="Messages recieved : 0" HorizontalAlignment="Right" Margin="0,456,34,0" VerticalAlignment="Top"/>
     </Grid>
 </Window>
