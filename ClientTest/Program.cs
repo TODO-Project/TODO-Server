@@ -58,6 +58,9 @@ namespace ClientTest
                                     Console.WriteLine("Arrival confirmed !");
                                     test = true;
                                     break;
+                                case ServerMessageTypes.DisconnectedFromServer:
+                                    Console.WriteLine("You have been kicked !");
+                                    break;
                                 default:
                                     break;
                             }

@@ -65,6 +65,8 @@ namespace TODO_Server.Server
             NetPeerConfiguration config = new NetPeerConfiguration("TODO-Game");
             ServerThread = new Thread(Work);
             ShouldRun = true;
+            PlayerList = new List<Player>();
+            ServerConsole.ConsoleWindow.ListViewPlayerList.ItemsSource = PlayerList;
 
             config.MaximumConnections = 128;
             config.Port = 12345;
@@ -150,8 +152,8 @@ namespace TODO_Server.Server
             {
                 ServerConsole.ConsoleWindow.LabelStatsBytesRecieved.Content = "Bytes recieved : " + Server.Statistics.ReceivedBytes + "B";
                 ServerConsole.ConsoleWindow.LabelStatsBytesSent.Content = "Bytes sent : " + Server.Statistics.SentBytes + "B";
-                ServerConsole.ConsoleWindow.LabelStatsMsgRecieved.Content = "Messages recieved : " + Server.Statistics.ReceivedMessages + "B";
-                ServerConsole.ConsoleWindow.LabelStatsMsgSent.Content = "Messages sent : " + Server.Statistics.SentMessages + "B";
+                ServerConsole.ConsoleWindow.LabelStatsMsgRecieved.Content = "Messages recieved : " + Server.Statistics.ReceivedMessages;
+                ServerConsole.ConsoleWindow.LabelStatsMsgSent.Content = "Messages sent : " + Server.Statistics.SentMessages;
             }));
         }
 
@@ -192,28 +194,44 @@ namespace TODO_Server.Server
                     Player p = new Player(msg.ID, msg.TeamNumber, msg.Weapon, msg.Name)
                     { IP = inc.SenderEndPoint.ToString() };
 
-                    bool AlreadyExists = false;
+                    RefreshPlayerList();
 
-                    foreach (var item in ServerConsole.ConsoleWindow.ListViewPlayerList.Items)
+                    if (PlayerList.Find(x => x.ID == p.ID) == null)
                     {
-                        if ((item as Player).ID == p.ID)
-                            AlreadyExists = true;
-                    }
-
-                    if (!AlreadyExists)
-                    {
-                        ServerConsole.AddNewPlayerToList(p);
-
-                        ServerConsole.Print("Added player " + p.Name + "(" + p.ID + ") to server list", ConsoleFlags.Debug);
+                        PlayerList.Add(p);
                         ConfirmPlayerArrivalMessage newmsg = new ConfirmPlayerArrivalMessage();
                         newmsg.EncodeMessage(outmsg);
                         Server.SendMessage(outmsg, inc.SenderConnection, NetDeliveryMethod.ReliableOrdered);
                     }
-                    
                     break;
                 default:
                     break;
             }
+        }
+
+        private static void RefreshPlayerList()
+        {
+            ServerConsole.ConsoleWindow.Dispatcher.BeginInvoke(new Action(delegate ()
+            {
+                ServerConsole.ConsoleWindow.ListViewPlayerList.Items.Refresh();
+            }));
+        }
+
+        public static bool DisconnectPlayer(DisconnectionFlags flag, string name)
+        {
+            Player p = PlayerList.Find(x => x.Name == name);
+            if (p == null)
+                return false;
+            DisconnectedFromServerMessage msg = new DisconnectedFromServerMessage(flag, p.ID);
+            foreach (var connection in Server.Connections)
+            {
+                NetOutgoingMessage outmsg = Server.CreateMessage();
+                msg.EncodeMessage(outmsg);
+                Server.SendMessage(outmsg, connection, NetDeliveryMethod.ReliableOrdered);
+            }
+            PlayerList.Remove(p);
+            RefreshPlayerList();
+            return true;
         }
 
         #endregion

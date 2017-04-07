@@ -92,12 +92,7 @@ namespace TODO_Server.Console
                     new ClearCommand(Console);
                     return true;
                 case "echo":
-                    string echoContent = "";
-                    for(int i = 1; i < args.Length; i++)
-                    {
-                        echoContent += args[i] + " ";
-                    }
-                    new EchoCommand(echoContent);
+                    new EchoCommand(AggregateArgs(args, 1));
                     return true;
                 case "help":
                     new HelpCommand();
@@ -114,9 +109,24 @@ namespace TODO_Server.Console
                 case "port":
                     new PortCommand();
                     return true;
+                case "kick":
+                    new KickCommand(AggregateArgs(args, 1));
+                    return true;
                 default:
                     return false;
             }
+        }
+
+        private static string AggregateArgs(string[] args, int offset)
+        {
+            string res = "";
+            for (int i = offset; i < args.Length; i++)
+            {
+                res += args[i];
+                if (i != args.Length - 1)
+                    res += " ";
+            }
+            return res;
         }
 
         /// <summary>

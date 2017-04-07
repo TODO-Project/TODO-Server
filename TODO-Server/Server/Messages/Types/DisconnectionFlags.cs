@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace TODO_Server.Server.Messages.Types
 {
-    public enum ServerMessageTypes
+    public enum DisconnectionFlags
     {
-        ConfirmArrivalOnServer = 1,
-        DisconnectedFromServer = 2
+        None,
+        Kick
     }
 }

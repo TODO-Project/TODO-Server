@@ -57,6 +57,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Console\Commands\ClearLogCommand.cs" />
+    <Compile Include="Console\Commands\KickCommand.cs" />
     <Compile Include="Console\Commands\PortCommand.cs" />
     <Compile Include="Console\Commands\SeedCommand.cs" />
     <Compile Include="Server\GameServer.cs" />
@@ -65,7 +66,9 @@
     <Compile Include="Server\Messages\Abstract\ServerMessage.cs" />
     <Compile Include="Server\Messages\Client messages\InitialPlayerInfoMessage.cs" />
     <Compile Include="Server\Messages\Server messages\ConfirmPlayerArrivalMessage.cs" />
+    <Compile Include="Server\Messages\Server messages\DisconnectedFromServerMessage.cs" />
     <Compile Include="Server\Messages\Types\ClientMessageTypes.cs" />
+    <Compile Include="Server\Messages\Types\DisconnectionFlags.cs" />
     <Compile Include="Server\Messages\Types\ServerMessageTypes.cs" />
     <Compile Include="Server\Player.cs" />
     <Page Include="MainWindow.xaml">
