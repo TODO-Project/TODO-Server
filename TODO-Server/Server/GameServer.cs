@@ -13,6 +13,10 @@ using TODO_Server.Server.Messages.Server_messages;
 
 namespace TODO_Server.Server
 {
+    /// <summary>
+    /// Describes the game server, handling incoming and outcoming messages,
+    /// and interfacing with the user.
+    /// </summary>
     public static class GameServer
     {
         #region Constants
@@ -34,25 +38,60 @@ namespace TODO_Server.Server
         #endregion
 
         #region Properties
-
+        
+        /// <summary>
+        /// The list of players present on the server
+        /// </summary>
         public static List<Player> PlayerList { get => playerList; set => playerList = value; }
+
+        /// <summary>
+        /// The server handling connections and messages
+        /// </summary>
         public static NetServer Server { get => server; private set => server = value; }
+
+        /// <summary>
+        /// The randomly generated seed used for map generation
+        /// </summary>
         public static int Seed { get => seed; set => seed = value; }
+
+        /// <summary>
+        /// The working thread, handling messages
+        /// </summary>
         public static Thread ServerThread { get => serverThread; set => serverThread = value; }
+
+        /// <summary>
+        /// The name used by the server to identify incoming connections from clients
+        /// </summary>
         public static string Name { get => name; set => name = value; }
+
+        /// <summary>
+        /// Unusued. Gets the next packet number
+        /// </summary>
         public static int PacketNumber { get => ++packetNumber == int.MaxValue ? 0 : packetNumber; }
+
+        /// <summary>
+        /// Describes whether or not the server should continue to run
+        /// </summary>
         public static bool ShouldRun { get => shouldRun; set => shouldRun = value; }
 
         #endregion
 
         #region Methods
 
+        #region Initialization
+
+        /// <summary>
+        /// Initializes the server
+        /// </summary>
         public static void Initialize()
         {
             InitializeSeed();
             InitializeServer();
         }
 
+        /// <summary>
+        /// Initializes the seed for the server
+        /// </summary>
         private static void InitializeSeed()
         {
             ServerConsole.Print("Initializing game server...", ConsoleFlags.Info);
@@ -60,6 +99,9 @@ namespace TODO_Server.Server
             ServerConsole.Print("Seed generated : " + Seed, ConsoleFlags.Info);
         }
 
+        /// <summary>
+        /// Initializes the server values
+        /// </summary>
         private static void InitializeServer()
         {
             NetPeerConfiguration config = new NetPeerConfiguration("TODO-Game");
@@ -83,6 +125,13 @@ namespace TODO_Server.Server
             ServerConsole.Print("The server has started successfully on thread " + ServerThread.ManagedThreadId + "(" + ServerThread.Name + ")", ConsoleFlags.Info);
         }
 
+        #endregion
+
+        #region Work
+
+        /// <summary>
+        /// The method used by the working thread : handles messages
+        /// </summary>
         private static void Work()
         {
             while(ShouldRun)
@@ -146,6 +195,13 @@ namespace TODO_Server.Server
             }
         }
 
+        #endregion
+
+        #region Interface
+
+        /// <summary>
+        /// Updates the server statistics
+        /// </summary>
         private static void UpdateStats()
         {
             ServerConsole.ConsoleWindow.Dispatcher.BeginInvoke(new Action(delegate ()
@@ -157,30 +213,25 @@ namespace TODO_Server.Server
             }));
         }
 
-        private static void SendDiscoveryResponse(NetIncomingMessage inc)
+        /// <summary>
+        /// Refreshes the player list
+        /// </summary>
+        private static void RefreshPlayerList()
         {
-            ServerConsole.Print("Recieved discovery request from " + inc.SenderEndPoint.ToString(), ConsoleFlags.Info);
-            NetOutgoingMessage msg = Server.CreateMessage();
-            msg.Write(Name);
-
-            Server.SendDiscoveryResponse(msg, inc.SenderEndPoint);
+            ServerConsole.ConsoleWindow.Dispatcher.BeginInvoke(new Action(delegate ()
+            {
+                ServerConsole.ConsoleWindow.ListViewPlayerList.Items.Refresh();
+            }));
         }
 
-        private static void ApproveConnection(NetIncomingMessage inc)
-        {
-            string secret = inc.ReadString();
-            if (secret == "TODO-Game Client")
-            {
-                inc.SenderConnection.Approve();
-                ServerConsole.Print("Approved incoming connection from " + inc.SenderEndPoint.ToString(), ConsoleFlags.Info);
-            }
-            else
-            {
-                inc.SenderConnection.Deny();
-                ServerConsole.Print("Denied incoming connection from " + inc.SenderEndPoint.ToString() + " (Secret was " + secret + " instead of TODO-Game Client)", ConsoleFlags.Alert);
-            }
-        }
+        #endregion
 
+        #region Messages
+
+        /// <summary>
+        /// Handles data messages sent by the client
+        /// </summary>
+        /// <param name="inc">The incoming message</param>
         private static void HandleMessages(NetIncomingMessage inc)
         {
             NetOutgoingMessage outmsg = Server.CreateMessage();
@@ -209,14 +260,44 @@ namespace TODO_Server.Server
             }
         }
 
-        private static void RefreshPlayerList()
+        /// <summary>
+        /// Sends a discovery response message to the sender
+        /// </summary>
+        /// <param name="inc">The incoming message</param>
+        private static void SendDiscoveryResponse(NetIncomingMessage inc)
         {
-            ServerConsole.ConsoleWindow.Dispatcher.BeginInvoke(new Action(delegate ()
-            {
-                ServerConsole.ConsoleWindow.ListViewPlayerList.Items.Refresh();
-            }));
+            ServerConsole.Print("Recieved discovery request from " + inc.SenderEndPoint.ToString(), ConsoleFlags.Info);
+            NetOutgoingMessage msg = Server.CreateMessage();
+            msg.Write(Name);
+
+            Server.SendDiscoveryResponse(msg, inc.SenderEndPoint);
         }
 
+        /// <summary>
+        /// Approves the connection from a sender
+        /// </summary>
+        /// <param name="inc">The incoming connection message</param>
+        private static void ApproveConnection(NetIncomingMessage inc)
+        {
+            string secret = inc.ReadString();
+            if (secret == "TODO-Game Client")
+            {
+                inc.SenderConnection.Approve();
+                ServerConsole.Print("Approved incoming connection from " + inc.SenderEndPoint.ToString(), ConsoleFlags.Info);
+            }
+            else
+            {
+                inc.SenderConnection.Deny();
+                ServerConsole.Print("Denied incoming connection from " + inc.SenderEndPoint.ToString() + " (Secret was " + secret + " instead of TODO-Game Client)", ConsoleFlags.Alert);
+            }
+        }
+
+        /// <summary>
+        /// Disconnects a player using its name and a flag describing the disconnection context
+        /// </summary>
+        /// <param name="flag">The disconnection flag</param>
+        /// <param name="name">The name of the player to be kicked</param>
+        /// <returns>True if the player has been kicked; false otherwise</returns>
         public static bool DisconnectPlayer(DisconnectionFlags flag, string name)
         {
             Player p = PlayerList.Find(x => x.Name == name);
@@ -233,6 +314,8 @@ namespace TODO_Server.Server
             RefreshPlayerList();
             return true;
         }
+
+        #endregion
 
         #endregion
 

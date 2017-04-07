@@ -117,6 +117,12 @@ namespace TODO_Server.Console
             }
         }
 
+        /// <summary>
+        /// Aggregates command arguments to return them as a whole, starting from an offset
+        /// </summary>
+        /// <param name="args">The argument array to aggregate</param>
+        /// <param name="offset">The index where aggregation should begin</param>
+        /// <returns></returns>
         private static string AggregateArgs(string[] args, int offset)
         {
             string res = "";

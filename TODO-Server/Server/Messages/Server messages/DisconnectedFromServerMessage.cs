@@ -9,9 +9,20 @@ using TODO_Server.Server.Messages.Types;
 
 namespace TODO_Server.Server.Messages.Server_messages
 {
+    /// <summary>
+    /// A message sent by the server to confirm the disconnection of a player.
+    /// The disconnection context is stored in the DisconnectionFlags enum.
+    /// </summary>
     class DisconnectedFromServerMessage : ServerMessage
     {
+        /// <summary>
+        /// The flag describing the disconnection context
+        /// </summary>
         public DisconnectionFlags Flag { get; set; }
+
+        /// <summary>
+        /// The ID of the player being disconnected
+        /// </summary>
         public long ID { get; set; }
 
         public DisconnectedFromServerMessage(DisconnectionFlags flag, long id)
