@@ -105,6 +105,11 @@ namespace TODO_Server.Server
 
         #region Methods
 
+        public override string ToString()
+        {
+            return Name + " (" + ID + ")";
+        }
+
         #endregion
     }
 }

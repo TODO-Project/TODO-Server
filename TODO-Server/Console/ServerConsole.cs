@@ -112,6 +112,9 @@ namespace TODO_Server.Console
                 case "kick":
                     new KickCommand(AggregateArgs(args, 1));
                     return true;
+                case "playerlist":
+                    new PlayerlistCommand();
+                    return true;
                 default:
                     return false;
             }

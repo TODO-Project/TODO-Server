@@ -58,6 +58,7 @@
     </ApplicationDefinition>
     <Compile Include="Console\Commands\ClearLogCommand.cs" />
     <Compile Include="Console\Commands\KickCommand.cs" />
+    <Compile Include="Console\Commands\PlayerlistCommand.cs" />
     <Compile Include="Console\Commands\PortCommand.cs" />
     <Compile Include="Console\Commands\SeedCommand.cs" />
     <Compile Include="Server\GameServer.cs" />
