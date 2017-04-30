@@ -84,40 +84,44 @@ namespace TODO_Server.Console
         public static bool HandleCommands(string command)
         {
             Print(command);
-            string[] args = command.Split(' ');
-            switch (args[0].ToLower())
+            if (command[0] == '/')
             {
-                case "cls":
-                case "clear":
-                    new ClearCommand(Console);
-                    return true;
-                case "echo":
-                    new EchoCommand(AggregateArgs(args, 1));
-                    return true;
-                case "help":
-                    new HelpCommand();
-                    return true;
-                case "exit":
-                    new ExitCommand(ConsoleWindow);
-                    return true;
-                case "seed":
-                    new SeedCommand();
-                    return true;
-                case "clearlog":
-                    new ClearLogCommand();
-                    return true;
-                case "port":
-                    new PortCommand();
-                    return true;
-                case "kick":
-                    new KickCommand(AggregateArgs(args, 1));
-                    return true;
-                case "playerlist":
-                    new PlayerlistCommand();
-                    return true;
-                default:
-                    return false;
+                string[] args = command.Substring(1).Split(' ');
+                switch (args[0].ToLower())
+                {
+                    case "cls":
+                    case "clear":
+                        new ClearCommand(Console);
+                        return true;
+                    case "echo":
+                        new EchoCommand(AggregateArgs(args, 1));
+                        return true;
+                    case "help":
+                        new HelpCommand();
+                        return true;
+                    case "exit":
+                        new ExitCommand(ConsoleWindow);
+                        return true;
+                    case "seed":
+                        new SeedCommand();
+                        return true;
+                    case "clearlog":
+                        new ClearLogCommand();
+                        return true;
+                    case "port":
+                        new PortCommand();
+                        return true;
+                    case "kick":
+                        new KickCommand(AggregateArgs(args, 1));
+                        return true;
+                    case "playerlist":
+                        new PlayerlistCommand();
+                        return true;
+                    default:
+                        return false;
+                }
             }
+            return false;
         }
 
         /// <summary>

@@ -33,10 +33,15 @@ namespace TODO_Server
         {
             if (e.Key == Key.Enter)
             {
-                if (!ServerConsole.HandleCommands(TextBoxConsoleInput.Text))
+                if (TextBoxConsoleInput.Text[0] != '/')
+                {
+                    ServerConsole.Print(TextBoxConsoleInput.Text);
+                }
+                else if (!ServerConsole.HandleCommands(TextBoxConsoleInput.Text))
                 {
                     ServerConsole.Print("Command \"" + TextBoxConsoleInput.Text + "\" unknown. ", ConsoleFlags.Alert);
                 }
+
                 TextBoxConsoleInput.Text = "";
                 if (ScrollViewerConsole.IsEnabled)
                 {

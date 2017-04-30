@@ -157,7 +157,7 @@ namespace TODO_Server.Server
                                 case NetConnectionStatus.Connected:
                                 case NetConnectionStatus.Disconnecting:
                                 case NetConnectionStatus.Disconnected:
-                                    ServerConsole.Print(inc.ReadString(), ConsoleFlags.Info);
+                                    ServerConsole.Print(inc.MessageType.ToString() + " " + inc.ReadString(), ConsoleFlags.Info);
                                     break;
                                 default:
                                     break;
@@ -193,6 +193,8 @@ namespace TODO_Server.Server
 
                 Thread.Sleep(Tickrate);
             }
+
+            ServerConsole.Print("Server has stopped !", ConsoleFlags.Alert);
         }
 
         #endregion
